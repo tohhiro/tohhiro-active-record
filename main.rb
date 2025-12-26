@@ -58,4 +58,20 @@ user.save # user = User.create do |u| の場合は不要
 # pp User.find_by_name("Manson") # 上記と同じで動的メソッドを使用
 
 # pp User.find_by_name!("Manson") # nameがMansonのレコード。見つからない場合は例外を発生させる
-pp User.find_by_name! "tanaka" # !マーク付きメソッドで例外発生させる
+# pp User.find_by_name! "tanaka" # !マーク付きメソッドで例外発生させる
+
+# whereメソッドでの検索
+# pp User.select(:id, :name, :age).where(age: 25) # ageが25のレコードを配列で取得・表示
+# pp User.select(:id, :name, :age).where(age: 22..29) # ageが22〜29のレコードを配列で取得・表示
+# pp User.select(:id, :name, :age).where(age: [22, 30]) # ageが22または30のレコードを配列で取得・表示
+
+# and検索
+# pp User.select(:id, :name, :age).where("age >= 25").where("age <= 30") # ageが25以上かつ30以下のレコードを配列で取得・表示 つまりwhere(age: 22..30) と同じ
+# pp User.select(:id, :name, :age).where("age >= 25 and age <= 30") # 上記と同じ
+
+# or検索
+# pp User.select(:id, :name, :age).where("age <= 25 or age >= 30") # 上記と同じ
+# pp User.where("age <= 25").or(User.where("age >= 30")).select(:id, :name, :age) # 上記と同じ（selectを最後に持ってきて、冗長を避けるパターン）
+
+# NOT検索
+pp User.select(:id, :name, :age).where.not(id: 3) # idが3以外のレコードを配列で取得・表示
