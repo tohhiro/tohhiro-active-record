@@ -16,7 +16,8 @@ class User < ActiveRecord::Base
     self.table_name = "user" # テーブル名が規約に従っていない場合に指定
 end
 
-# User.delete_all # 既存データ削除
+User.delete_all # 既存データ削除
+User.connection.execute("DELETE FROM sqlite_sequence WHERE name='user'") # オートインクリメントのリセット（sqlite_sequenceはSQLite固有） [memo] connection.executeはMySQLやPostgressqlなどのDBでも使える
 
 # インサート
 # 方法1
@@ -40,9 +41,21 @@ end
 user.save # user = User.create do |u| の場合は不要
 
 # # pp User.all # 全件全カラムを取得して表示
-pp User.select("id, name, age").all # カラム指定して取得・表示
+# pp User.select("id, name, age").all # カラム指定して取得・表示
 
 # selectの中はシンボルでも可
-pp User.select(:id, :name, :age).first # カラム指定して1件目を取得・表示
-pp User.select(:id, :name, :age).last # カラム指定して最終件を取得・表示
-pp User.select(:id, :name, :age).first(3) # カラム指定して最初から3件分を取得・表示
+# pp User.select(:id, :name, :age).first # カラム指定して1件目を取得・表示
+# pp User.select(:id, :name, :age).last # カラム指定して最終件を取得・表示
+# pp User.select(:id, :name, :age).first(3) # カラム指定して最初から3件分を取得・表示
+
+# idでの検索
+# pp User.find(2) # id=2のレコードを取得・表示
+# pp User.select(:id, :name, :age).find(3) # id=3のレコードをカラム指定して取得・表示
+
+# id以外での検索
+# pp User.find_by(name: "Manson") # nameがMansonのレコード
+# pp User.find_by name: "Manson" # 上記と同じで引数の括弧は省略可能
+# pp User.find_by_name("Manson") # 上記と同じで動的メソッドを使用
+
+# pp User.find_by_name!("Manson") # nameがMansonのレコード。見つからない場合は例外を発生させる
+pp User.find_by_name! "tanaka" # !マーク付きメソッドで例外発生させる
