@@ -1,7 +1,7 @@
-create table user(
-    id serial primary key,
-    name text,
-    age integer,
-    created_at,
-    updated_at
-)
+CREATE TABLE user(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    age INTEGER,
+    created_at DATETIME,
+    updated_at DATETIME
+);
