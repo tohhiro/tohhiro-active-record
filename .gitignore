@@ -1,4 +1,6 @@
 Gemfile.lock
 *.db
+*.db-shm
+*.db-wal
 *.sqlite3
 .DS_Store
