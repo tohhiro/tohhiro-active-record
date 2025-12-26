@@ -47,3 +47,7 @@ docker compose exec app ruby main.rb
 ## SELECT 文で確認
 
 docker compose exec app sqlite3 myapp.db -header -column "SELECT \* FROM user;"
+
+# Ruby のファイルの実行
+
+docker compose exec app ruby file_name.rb

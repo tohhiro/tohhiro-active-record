@@ -74,4 +74,14 @@ user.save # user = User.create do |u| の場合は不要
 # pp User.where("age <= 25").or(User.where("age >= 30")).select(:id, :name, :age) # 上記と同じ（selectを最後に持ってきて、冗長を避けるパターン）
 
 # NOT検索
-pp User.select(:id, :name, :age).where.not(id: 3) # idが3以外のレコードを配列で取得・表示
+# pp User.select(:id, :name, :age).where.not(id: 3) # idが3以外のレコードを配列で取得・表示
+
+# プレースホルダを使った検索（SQLインジェクション対策）
+min = 25
+max = 30
+# pp User.select(:id, :name, :age).where("age >= ? and age <= ?", min, max) # ageが25以上かつ30以下のレコードを配列で取得・表示
+pp User.select(:id, :name, :age).where("age >:min and age <= :max", {min: min, max: max}) # 上記と同じ
+# pp User.select(:id, :name, :age).where("age >= #{min} and age <= #{max}") # NGパターン（SQLインジェクションの危険性あり）
+
+# LIKE検索
+pp User.select(:id, :name, :age).where("name LIKE ?", "%an%") # nameに'an'を含むレコードを配列で取得・表示
