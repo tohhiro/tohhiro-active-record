@@ -13,7 +13,7 @@ ActiveRecord::Base.establish_connection(
 )
 
 class User < ActiveRecord::Base
-    self.table_name = "user" # テーブル名が規約に従っていない場合に指定
+    # テーブル名はusers（規約に従っているため明示不要）
 
     # クラスメソッドでtop3を抽出する例
     # def self.top3
@@ -53,7 +53,7 @@ class User < ActiveRecord::Base
 end
 
 User.delete_all # 既存データ削除
-User.connection.execute("DELETE FROM sqlite_sequence WHERE name='user'") # オートインクリメントのリセット（sqlite_sequenceはSQLite固有） [memo] connection.executeはMySQLやPostgressqlなどのDBでも使える
+User.connection.execute("DELETE FROM sqlite_sequence WHERE name='users'") # オートインクリメントのリセット（sqlite_sequenceはSQLite固有） [memo] connection.executeはMySQLやPostgressqlなどのDBでも使える
 
 # インサート
 # 方法1
