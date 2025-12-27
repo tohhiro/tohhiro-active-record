@@ -14,6 +14,20 @@ ActiveRecord::Base.establish_connection(
 
 class User < ActiveRecord::Base
     self.table_name = "user" # テーブル名が規約に従っていない場合に指定
+
+    # クラスメソッドでtop3を抽出する例
+    # def self.top3
+    #     select(:id, :name, :age).order(age: :asc).limit(3)
+    # end
+    # 引数を取るクラスメソッドの例
+    # def self.age_greater_than(min_age)
+    #     select(:id, :name, :age).where("age > ?", min_age)
+    # end
+
+    # scopeを使ってtop3を抽出する例
+    # scope :top3, -> { select(:id, :name, :age).order(age: :asc).limit(3) }  
+    # 引数を取るscopeの例
+    scope :age_greater_than, ->(min_age) { select(:id, :name, :age).where("age > ?", min_age) }
 end
 
 User.delete_all # 既存データ削除
@@ -88,10 +102,18 @@ user.save # user = User.create do |u| の場合は不要
 
 # ORDER BY
 # pp User.select(:id, :name, :age).order(age: :asc) # age昇順で取得・表示
-pp User.select(:id, :name, :age).order(age: :desc) # age降順で取得・表示
+# pp User.select(:id, :name, :age).order(age: :desc) # age降順で取得・表示
 
 # LIMIT
-pp User.select(:id, :name, :age).order(age: :asc).limit(2) # age昇順で上位2件を取得・表示
+# pp User.select(:id, :name, :age).order(age: :asc).limit(2) # age昇順で上位2件を取得・表示
 
 # OFFSET
-pp User.select(:id, :name, :age).order(age: :asc).limit(2).offset(1) # age昇順で上位2件をスキップして取得・表示
+# pp User.select(:id, :name, :age).order(age: :asc).limit(2).offset(1) # age昇順で上位2件をスキップして取得・表示
+
+# クラスメソッドで定義したtop3を実行して表示
+# pp User.top3 # クラスメソッドtop3を実行して表示
+# pp User.age_greater_than(25) # ageが25より大きいレコードを取得・表示
+
+# scopeで定義したtop3を実行して表示（memo: scopeの方がメソッドチェーンで使いやすい）
+# pp User.top3 # scopeで定義したtop3を実行して表示（クラスメソッド版と同じ書き方、結果）
+pp User.age_greater_than(25) # scopeで定義したage_greater_thanを実行して表示（クラスメソッド版と同じ書き方、結果）
