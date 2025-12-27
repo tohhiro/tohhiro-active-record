@@ -119,7 +119,31 @@ user.save # user = User.create do |u| の場合は不要
 # pp User.age_greater_than(25) # scopeで定義したage_greater_thanを実行して表示（クラスメソッド版と同じ書き方、結果）
 
 # find_or_create_byメソッド（レコードが存在しなければ作成）
-user = User.find_or_create_by(name: "Alice") do |u|
-    u.age = 27
-end
-pp user
+# user = User.find_or_create_by(name: "Alice") do |u|
+#     u.age = 27
+# end
+# pp user
+
+# updateメソッドで更新（バリデーションなど高機能であるが低速）
+# 名前がCarolのユーザーを取得して年齢を26に更新
+# user = User.find_by_name("Carol")
+# user.update(age: 26)
+# pp user
+# User.where(name: "Carol").update(age: 26) # 上記と同じで1行で書くパターン
+# pp User.find_by_name("Carol") # 更新後の内容を表示
+# 名前がCarolのユーザーの年齢を27に更新（複数レコードの場合もある場合）
+# 年齢が20代のユーザー全員の年齢を30に更新
+# User.where("age >= 20").update(age: 30)
+# pp User.where(age: 30) # 更新後の内容を表示
+# 年齢が20代のユーザーを30代に更新
+
+# update_allメソッドで更新（バリデーションなど単機能であるが高速）
+# memo: update_allはDBに直接SQLを発行して更新するため、updated_atカラムは自動更新されない点に注意
+# 名前がCarolのユーザー
+# User.where(name: "Carol").update_all(age: 27)
+# pp User.where(name: "Carol") # 更新後の内容を表示
+# 名前がCarolのユーザーの名前と年齢を28に更新
+# User.where(name: "Carol").update_all(name: "Caroline", age: 28)
+# pp User.where(name: "Caroline") # 更新後の内容を表示
+User.where(age: 20..29).update_all("age = age + 10") # update_allはSQLのupdate文のように書ける
+pp User.where(age: 30..39) # 更新後の内容を表示
