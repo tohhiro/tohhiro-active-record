@@ -219,7 +219,12 @@ Comment.create(user_id: 2, body: "Hi, Carol here! This is my comment.") # ID=2�
 # end
 
 # commentsを軸にしてuser情報を取得する例
-comments = Comment.includes(:user).all # includesは先に記載
-comments.each do |comment|
-    puts "Comment ID: #{comment.id}, Body: #{comment.body}, User Name: #{comment.user.name}, User Age: #{comment.user.age}"
-end
+# comments = Comment.includes(:user).all # includesは先に記載
+# comments.each do |comment|
+#     puts "Comment ID: #{comment.id}, Body: #{comment.body}, User Name: #{comment.user.name}, User Age: #{comment.user.age}"
+# end
+
+# ユーザが削除されたときに関連するコメントも削除される例
+user = User.find(1) # ID=1のユーザーを取得
+user.destroy # ユーザーを削除（関連するコメントも削除される）
+pp Comment.all # 削除後のコメント内容を表示
