@@ -32,7 +32,7 @@ docker compose down
 
 docker compose exec -T app sqlite3 myapp.db < import.sql
 
-## インポート後、テーブルが作成されたか
+## インポート後、テーブルが作成されたか（スキーマの確認）
 
 docker compose exec app sqlite3 myapp.db ".tables"
 
