@@ -28,6 +28,13 @@ class User < ActiveRecord::Base
     # scope :top3, -> { select(:id, :name, :age).order(age: :asc).limit(3) }  
     # 引数を取るscopeの例
     scope :age_greater_than, ->(min_age) { select(:id, :name, :age).where("age > ?", min_age) }
+
+    # バリデーションの例
+    # validates :name, presence :true # nameカラムが必須
+    validates :name, :age, presence: true # nameとageの両方が必須を1行で指定
+    validates :name, length: { minimum: 3 } # nameカラムの最小文字数を3に設定
+
+
 end
 
 User.delete_all # 既存データ削除
@@ -164,5 +171,11 @@ user.save # user = User.create do |u| の場合は不要
 # user.destroy # レコードを削除
 # pp User.all # 削除後の内容を表示
 # 30歳以上のユーザーを削除
-User.where("age >= 30").destroy_all
-pp User.all # 削除後の内容を表示
+# User.where("age >= 30").destroy_all
+# pp User.all # 削除後の内容を表示
+
+# validations
+user = User.new(name: "", age: nil)
+if !user.save
+    pp user.errors.messages # バリデーションエラーメッセージを表示
+end
