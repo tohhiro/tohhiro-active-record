@@ -116,4 +116,10 @@ user.save # user = User.create do |u| の場合は不要
 
 # scopeで定義したtop3を実行して表示（memo: scopeの方がメソッドチェーンで使いやすい）
 # pp User.top3 # scopeで定義したtop3を実行して表示（クラスメソッド版と同じ書き方、結果）
-pp User.age_greater_than(25) # scopeで定義したage_greater_thanを実行して表示（クラスメソッド版と同じ書き方、結果）
+# pp User.age_greater_than(25) # scopeで定義したage_greater_thanを実行して表示（クラスメソッド版と同じ書き方、結果）
+
+# find_or_create_byメソッド（レコードが存在しなければ作成）
+user = User.find_or_create_by(name: "Alice") do |u|
+    u.age = 27
+end
+pp user
