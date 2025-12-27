@@ -35,6 +35,21 @@ class User < ActiveRecord::Base
     validates :name, length: { minimum: 3 } # nameカラムの最小文字数を3に設定
 
 
+    # callback
+    # before_destroyコールバックの例
+    before_destroy :print_before_msg
+
+    # after_destroyコールバックの例
+    after_destroy :print_after_msg
+
+    protected
+    def print_before_msg
+        puts "#{self.name} (ID: #{self.id}) will be destroyed."
+    end
+
+    def print_after_msg
+        puts "#{self.name} (ID: #{self.id}) was destroyed."
+    end
 end
 
 User.delete_all # 既存データ削除
@@ -175,7 +190,11 @@ user.save # user = User.create do |u| の場合は不要
 # pp User.all # 削除後の内容を表示
 
 # validations
-user = User.new(name: "", age: nil)
-if !user.save
-    pp user.errors.messages # バリデーションエラーメッセージを表示
-end
+# user = User.new(name: "", age: nil)
+# if !user.save
+#     pp user.errors.messages # バリデーションエラーメッセージを表示
+# end
+
+# callback
+# before_destroy、after_destroyコールバックの例
+User.where("age >= 20").destroy_all
