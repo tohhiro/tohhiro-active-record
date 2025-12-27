@@ -145,5 +145,24 @@ user.save # user = User.create do |u| の場合は不要
 # 名前がCarolのユーザーの名前と年齢を28に更新
 # User.where(name: "Carol").update_all(name: "Caroline", age: 28)
 # pp User.where(name: "Caroline") # 更新後の内容を表示
-User.where(age: 20..29).update_all("age = age + 10") # update_allはSQLのupdate文のように書ける
-pp User.where(age: 30..39) # 更新後の内容を表示
+# User.where(age: 20..29).update_all("age = age + 10") # update_allはSQLのupdate文のように書ける
+# pp User.where(age: 30..39) # 更新後の内容を表示
+
+# delete: 単機能だが高速
+# - delete
+# - delete_all
+# User.delete(1) # id=1のレコードを削除
+# pp User.all # 削除後の内容を表示
+# 25歳以上のユーザーを削除
+# User.where("age >= 25").delete_all
+# pp User.all # 削除後の内容を表示
+
+# destroy: 高機能であるが低速
+# - destroy
+# - destroy_all
+# user = User.find(2) # id=2のレコードを取得
+# user.destroy # レコードを削除
+# pp User.all # 削除後の内容を表示
+# 30歳以上のユーザーを削除
+User.where("age >= 30").destroy_all
+pp User.all # 削除後の内容を表示
