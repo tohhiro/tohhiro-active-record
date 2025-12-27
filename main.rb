@@ -77,11 +77,21 @@ user.save # user = User.create do |u| の場合は不要
 # pp User.select(:id, :name, :age).where.not(id: 3) # idが3以外のレコードを配列で取得・表示
 
 # プレースホルダを使った検索（SQLインジェクション対策）
-min = 25
-max = 30
-# pp User.select(:id, :name, :age).where("age >= ? and age <= ?", min, max) # ageが25以上かつ30以下のレコードを配列で取得・表示
-pp User.select(:id, :name, :age).where("age >:min and age <= :max", {min: min, max: max}) # 上記と同じ
+# min = 25
+# max = 30
+# # pp User.select(:id, :name, :age).where("age >= ? and age <= ?", min, max) # ageが25以上かつ30以下のレコードを配列で取得・表示
+# pp User.select(:id, :name, :age).where("age >:min and age <= :max", {min: min, max: max}) # 上記と同じ
 # pp User.select(:id, :name, :age).where("age >= #{min} and age <= #{max}") # NGパターン（SQLインジェクションの危険性あり）
 
 # LIKE検索
-pp User.select(:id, :name, :age).where("name LIKE ?", "%an%") # nameに'an'を含むレコードを配列で取得・表示
+# pp User.select(:id, :name, :age).where("name LIKE ?", "%an%") # nameに'an'を含むレコードを配列で取得・表示f
+
+# ORDER BY
+# pp User.select(:id, :name, :age).order(age: :asc) # age昇順で取得・表示
+pp User.select(:id, :name, :age).order(age: :desc) # age降順で取得・表示
+
+# LIMIT
+pp User.select(:id, :name, :age).order(age: :asc).limit(2) # age昇順で上位2件を取得・表示
+
+# OFFSET
+pp User.select(:id, :name, :age).order(age: :asc).limit(2).offset(1) # age昇順で上位2件をスキップして取得・表示
