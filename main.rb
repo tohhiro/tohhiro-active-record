@@ -14,6 +14,7 @@ ActiveRecord::Base.establish_connection(
 
 class User < ActiveRecord::Base
     # テーブル名はusers（規約に従っているため明示不要）
+    has_many :comments, dependent: :destroy
 
     # クラスメソッドでtop3を抽出する例
     # def self.top3
@@ -50,6 +51,11 @@ class User < ActiveRecord::Base
     def print_after_msg
         puts "#{self.name} (ID: #{self.id}) was destroyed."
     end
+end
+
+class Comment < ActiveRecord::Base
+    # テーブル名はcomments（規約に従っているため明示不要）
+    belongs_to :user # ここではユーザーは単数形になることに注意
 end
 
 User.delete_all # 既存データ削除
@@ -197,4 +203,23 @@ user.save # user = User.create do |u| の場合は不要
 
 # callback
 # before_destroy、after_destroyコールバックの例
-User.where("age >= 20").destroy_all
+# User.where("age >= 20").destroy_all
+
+# Associationsでuserに関連するcommentsテーブルを操作する例
+Comment.delete_all # 既存データ削除
+Comment.connection.execute("DELETE FROM sqlite_sequence WHERE name='comments'") # オートインクリメントのリセット（sqlite_sequenceはSQLite固有） [memo] connection.executeはMySQLやPostgressqlなどのDBでも使える
+Comment.create(user_id: 1, body: "Hello, this is Henry's comment.") # ID=1のユーザーに関連するコメントを作成
+Comment.create(user_id: 1, body: "Another comment from Henry.") # ID=1のユーザーに関連するコメントを追加作成
+Comment.create(user_id: 2, body: "Hi, Carol here! This is my comment.") # ID=2のユーザーに関連するコメントを作成
+
+# user = User.includes(:comments).find(1) # includesは先に記載
+# # pp user.comments # ID=1のユーザーに関連するコメントを表示
+# user.comments.each do |comment| # ID=1のユーザーに関連するコメントを1件ずつ表示
+#     puts "Comment ID: #{comment.id}, Body: #{comment.body}"
+# end
+
+# commentsを軸にしてuser情報を取得する例
+comments = Comment.includes(:user).all # includesは先に記載
+comments.each do |comment|
+    puts "Comment ID: #{comment.id}, Body: #{comment.body}, User Name: #{comment.user.name}, User Age: #{comment.user.age}"
+end
